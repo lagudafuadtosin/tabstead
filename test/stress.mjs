@@ -162,6 +162,12 @@ while (steps < STEPS && failed < 5) {
   else if (a < 95) { kind = "rescue"; await t({ do: "rescue" }); for (const u of expect.keys()) expect.set(u, (await t({ do: "overview" })).current); }
   else { kind = "rename"; const w = pick(o.workspaces); await t({ do: "rename", id: w.id, name: "R" + steps }); }
   counts[kind] = (counts[kind] ?? 0) + 1;
+  // Only these change the workspace you are in; anything else (closing a tab above all) must leave you where you were
+  if (!["switch", "create", "pick hidden", "search and go", "keyboard", "delete workspace", "rescue"].includes(kind)) {
+    await idle();
+    const now = (await t({ do: "overview" })).current;
+    if (now !== o.current) fail(`${kind} moved the window to another workspace`);
+  }
   lastLog = kind;
   await idle();
   s = await verify();

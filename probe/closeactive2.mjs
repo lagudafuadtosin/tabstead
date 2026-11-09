@@ -1,0 +1,36 @@
+// Probe: the tab used just before the one you close is a hidden tab of another workspace. Which workspace shows after?
+import puppeteer from "puppeteer-core";
+import http from "node:http";
+import { resolve } from "node:path";
+const server = http.createServer((q, r) => { r.setHeader("content-type", "text/html"); r.end(`<!doctype html><title>${q.url}</title>${q.url}`); });
+await new Promise((r) => server.listen(0, "127.0.0.1", r));
+const base = `http://127.0.0.1:${server.address().port}`;
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+const browser = await puppeteer.launch({ browser: "firefox", executablePath: process.env.FF ?? "C:/Program Files/Mozilla Firefox/firefox.exe", headless: true });
+await browser.installExtension(resolve("dist/firefox-test"));
+await sleep(2500);
+const first = (await browser.pages())[0];
+const page = await browser.newPage(); await page.goto(base + "/bridge"); await sleep(500);
+await first.close();
+let seq = 0;
+const t = (c) => page.evaluate((c, id) => new Promise((res) => { const on = (e) => { if (e.data?.tabsteadResult !== undefined && e.data.id === id) { removeEventListener("message", on); res(e.data.tabsteadResult); } }; addEventListener("message", on); postMessage({ tabsteadTest: c, id }, "*"); }), c, ++seq);
+const idle = async (ms = 800) => { await sleep(ms); await t({ do: "idle" }); };
+let o = await t({ do: "overview" });
+const work = o.workspaces[0].id;
+const x = await t({ do: "open", url: base + "/x", active: true });
+o = await t({ do: "create", name: "Trip" });
+const trip = o.current;
+await t({ do: "open", url: base + "/c", active: true });
+await idle();
+await t({ do: "switch", id: work });
+await idle();
+await t({ do: "activate", tabId: x });  // x is now in use; c (Trip, hidden) was in use just before
+await idle(400);
+let s = await t({ do: "state" });
+console.log("before: active", s.find((y) => y.active)?.url.replace(base, ""));
+await t({ do: "close", ids: [x] });
+await idle(1500);
+o = await t({ do: "overview" });
+s = await t({ do: "state" });
+console.log(`after closing /x: showing ${o.current === work ? "Work" : o.current === trip ? "TRIP" : o.current}; active ${s.find((y) => y.active)?.url.replace(base, "")}; visible: ${s.filter((y) => !y.hidden).map((y) => y.url.replace(base, "")).join(", ")}`);
+await browser.close(); server.close(); process.exit(0);

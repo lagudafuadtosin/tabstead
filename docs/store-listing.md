@@ -10,7 +10,7 @@ Workspaces for Firefox, built on Firefox's own tab groups. Switch between sets o
 Keep a workspace for work, one for a project and one for reading. Click a workspace in the sidebar and its tabs come back exactly as you left them, Firefox tab groups and all. The other workspaces' tabs are put away, never closed.
 
 Never lose a tab
-- Tabstead hides and shows tabs. It never closes one to switch.
+- Tabstead hides and shows tabs. It never closes one to switch. The first time, Firefox asks about the hidden tabs: choose Keep Tabs Hidden.
 - It keeps a copy of every workspace. When Firefox starts without reopening your last session, Tabstead brings back what is missing, and never opens a tab twice.
 - Picking a hidden tab from Firefox's list of all tabs takes you to its workspace.
 - A tab you reopen with Ctrl+Shift+T comes back where you can see it.
@@ -18,7 +18,7 @@ Never lose a tab
 - One button shows every hidden tab, whatever happens.
 
 Made for Firefox tab groups
-- Groups live inside their workspace and stay whole.
+- Groups live inside their workspace and stay whole. The tab bar shows only the groups of the workspace you are in, and each one comes back with its name and colour.
 - Right-click a tab and choose Move to workspace. A tab in a group takes its whole group along.
 - Open any workspace in a window of its own.
 
