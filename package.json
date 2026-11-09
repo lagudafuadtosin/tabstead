@@ -9,5 +9,6 @@
   },
   "devDependencies": {
     "puppeteer-core": "^25.16.0"
-  }
+  },
+  "license": "GPL-3.0-only"
 }

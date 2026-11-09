@@ -55,3 +55,7 @@ is for desktop Firefox.
   every step, every tab must exist exactly once, in its workspace.
 
 The restart tests use Firefox Developer Edition (`FIREFOX_DEV`), since only an installed add-on survives a restart.
+
+## Licence
+
+GPL-3.0. See [LICENSE](LICENSE).
