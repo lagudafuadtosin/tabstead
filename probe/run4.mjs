@@ -1,0 +1,14 @@
+import puppeteer from "puppeteer-core";
+import http from "node:http";
+import { resolve } from "node:path";
+const server = http.createServer((q, r) => { r.setHeader("content-type", "text/html"); r.end(`<!doctype html><title>${q.url}</title>${q.url}`); });
+await new Promise((r) => server.listen(0, "127.0.0.1", r));
+const base = `http://127.0.0.1:${server.address().port}`;
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+const browser = await puppeteer.launch({ browser: "firefox", executablePath: process.env.FIREFOX ?? "C:/Program Files/Mozilla Firefox/firefox.exe", headless: true });
+await browser.installExtension(resolve("probe/ext3"));
+await sleep(1000);
+const page = await browser.newPage(); await page.goto(base + "/bridge"); await sleep(400);
+const p = (c) => page.evaluate((c) => new Promise((res) => { const on = (e) => { if (e.data?.r !== undefined) { removeEventListener("message", on); res(e.data.r); } }; addEventListener("message", on); postMessage({ p: c }, "*"); }), c);
+console.log(JSON.stringify(await p({ do: "lastclose", u: base }), null, 1));
+await browser.close(); server.close();

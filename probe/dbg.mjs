@@ -1,0 +1,15 @@
+import puppeteer from "puppeteer-core";
+import http from "node:http";
+import { resolve } from "node:path";
+process.chdir("E:/postbarrel/oss/tabstead");
+const server = http.createServer((q, r) => { r.setHeader("content-type", "text/html"); r.end("x"); });
+await new Promise((r) => server.listen(0, "127.0.0.1", r));
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+const browser = await puppeteer.launch({ browser: "firefox", executablePath: "C:/Program Files/Mozilla Firefox/firefox.exe", headless: true });
+await browser.installExtension(resolve("dist/firefox-test"));
+await sleep(2500);
+const page = await browser.newPage(); await page.goto(`http://127.0.0.1:${server.address().port}/bridge`); await sleep(500);
+let seq = 0;
+const t = (c) => Promise.race([page.evaluate((c, id) => new Promise((res) => { const on = (e) => { if (e.data?.tabsteadResult !== undefined && e.data.id === id) { removeEventListener("message", on); res(e.data.tabsteadResult); } }; addEventListener("message", on); postMessage({ tabsteadTest: c, id }, "*"); }), c, ++seq), sleep(5000).then(() => "TIMEOUT")]);
+for (const c of ["boot", "running", "startInfo", "windows", "overview", "state"]) console.log(c, JSON.stringify(await t({ do: c })).slice(0, 300));
+await browser.close(); server.close(); process.exit(0);

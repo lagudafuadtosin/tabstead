@@ -1,0 +1,14 @@
+import puppeteer from "puppeteer-core";
+import http from "node:http";
+import { resolve } from "node:path";
+const server = http.createServer((q, r) => { r.setHeader("content-type", "text/html"); r.end("<!doctype html><title>probe</title>"); }).listen(0);
+const url = `http://localhost:${server.address().port}/`;
+const browser = await puppeteer.launch({ browser: "firefox", executablePath: "C:/Program Files/Mozilla Firefox/firefox.exe", headless: true });
+await browser.installExtension(resolve("ext"));
+await new Promise((r) => setTimeout(r, 1500));
+const page = await browser.newPage();
+await page.goto(url);
+await new Promise((r) => setTimeout(r, 800));
+const out = await page.evaluate(() => new Promise((res) => { addEventListener("message", (e) => e.data?.probeResult && res(e.data.probeResult)); postMessage({ probe: "run" }, "*"); }));
+for (const [k, v] of out) console.log(k.padEnd(32), JSON.stringify(v));
+await browser.close(); server.close();

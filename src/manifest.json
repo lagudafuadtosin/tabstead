@@ -1,0 +1,64 @@
+{
+  "manifest_version": 3,
+  "name": "Tabstead: Workspaces and Tab Groups",
+  "short_name": "Tabstead",
+  "version": "0.1.0",
+  "description": "Workspaces for Firefox, built on Firefox's own tab groups. Switch between sets of tabs and never lose one.",
+  "permissions": [
+    "tabs",
+    "tabHide",
+    "tabGroups",
+    "sessions",
+    "storage",
+    "unlimitedStorage",
+    "menus",
+    "alarms"
+  ],
+  "background": {
+    "scripts": [
+      "background.js"
+    ],
+    "type": "module"
+  },
+  "sidebar_action": {
+    "default_title": "Tabstead",
+    "default_panel": "sidebar.html",
+    "open_at_install": true,
+    "default_icon": "icons/tabstead.svg"
+  },
+  "commands": {
+    "_execute_sidebar_action": {
+      "suggested_key": {
+        "default": "Alt+Shift+W"
+      },
+      "description": "Open the workspaces sidebar"
+    },
+    "next-workspace": {
+      "suggested_key": {
+        "default": "Alt+Shift+PageDown"
+      },
+      "description": "Next workspace"
+    },
+    "previous-workspace": {
+      "suggested_key": {
+        "default": "Alt+Shift+PageUp"
+      },
+      "description": "Previous workspace"
+    }
+  },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "tabstead@lagudafuadtosin",
+      "strict_min_version": "140.0",
+      "data_collection_permissions": {
+        "required": [
+          "none"
+        ]
+      }
+    }
+  },
+  "icons": {
+    "48": "icons/tabstead.svg",
+    "96": "icons/tabstead.svg"
+  }
+}

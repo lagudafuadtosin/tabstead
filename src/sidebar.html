@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Tabstead</title><link rel="stylesheet" href="sidebar.css"></head>
+<body>
+  <header><h1>Workspaces</h1><span class="tools"><button id="help" title="How Tabstead works" aria-label="How Tabstead works">?</button><button id="add" class="primary" title="New workspace">+ New</button></span></header>
+  <section id="guide" hidden>
+    <h2>How Tabstead works</h2>
+    <ol>
+      <li>A workspace is a set of tabs in this window.</li>
+      <li>Click a workspace to switch. The other workspaces' tabs are hidden, never closed.</li>
+      <li><b>+ New</b> makes a workspace. Double-click a name to rename it, click its dot to change the colour.</li>
+      <li>Right-click a tab and choose <b>Move to workspace</b>. A tab in a Firefox tab group takes its group along.</li>
+      <li>Pinned tabs show in every workspace.</li>
+      <li>Search finds a tab in any workspace and takes you to it.</li>
+      <li>Tabstead keeps a copy of every workspace and brings back anything missing when Firefox starts. <b>Backups</b> keeps restore points, saves a file and imports Simple Tab Groups backups.</li>
+      <li>Alt+Shift+W opens this sidebar. Alt+Shift+Page Down and Page Up go to the next and previous workspace.</li>
+    </ol>
+    <label><input type="checkbox" id="guide-hide" checked> Don't show this again</label>
+    <button id="guide-close" class="primary">Got it</button>
+  </section>
+  <div id="notice" class="notice" hidden></div>
+  <form id="new" hidden><input id="new-name" placeholder="Name, e.g. Work" maxlength="60" aria-label="Name for the new workspace"><button class="primary">Add</button><button type="button" id="new-cancel">Cancel</button></form>
+  <div class="search"><input id="search" type="search" placeholder="Search tabs in every workspace" aria-label="Search tabs in every workspace"></div>
+  <ul id="results" aria-label="Tabs found" hidden></ul>
+  <ul id="list" aria-label="Workspaces"></ul>
+  <section id="backups" hidden>
+    <h2>Backups</h2>
+    <p class="muted">A restore adds back the tabs that are missing. Nothing is closed and nothing is opened twice.</p>
+    <div class="row"><button id="backup-now">Back up now</button><button id="backup-save">Save to a file</button><label class="button" for="backup-file">Import a file</label><input id="backup-file" type="file" accept=".json,application/json" hidden></div>
+    <p id="backup-msg" class="msg" role="status"></p>
+    <ul id="backup-list" aria-label="Restore points"></ul>
+  </section>
+  <footer><button id="rescue" title="Show every tab Tabstead has hidden, in this workspace">Show all hidden tabs</button><button id="backups-toggle" aria-expanded="false">Backups</button></footer>
+  <script type="module" src="sidebar.js"></script>
+</body></html>
